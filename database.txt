@@ -1,0 +1,2 @@
+database password securepassword
+database name face_attendance

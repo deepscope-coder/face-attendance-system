@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="attendance-box">
+    <h1>Class {{ class_id }}, {{ name }}</h1>
+    <img src="{{ url_for('static', filename='captured.jpg') }}" alt="Captured Photo" class="captured-photo">
+    
+    <form method="POST">
+        <button type="submit" name="action" value="enter" class="btn btn-enter">Enter</button>
+        <button type="submit" name="action" value="exit" class="btn btn-exit">Exit</button>
+    </form>
+    
+    <div class="attendance-history">
+        <h3>Attendance History</h3>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Entry Time</th>
+                <th>Exit Time</th>
+                <th>Duty Duration</th>
+            </tr>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.entry_time.date() }}</td>
+                <td>{{ record.entry_time.time() }}</td>
+                <td>{{ record.exit_time.time() if record.exit_time else '-' }}</td>
+                <td>{{ record.duty_duration if record.duty_duration else '-' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

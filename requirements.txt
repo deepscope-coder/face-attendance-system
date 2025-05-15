@@ -1,0 +1,10 @@
+insightface==0.7.3
+onnxruntime
+pinecone
+pandas
+flask
+flask-sqlalchemy
+psycopg2-binary
+python-dotenv
+opencv-python
+numpy

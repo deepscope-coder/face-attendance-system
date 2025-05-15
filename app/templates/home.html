@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="attendance-box">
+    <h1>Face Recognition Attendance System</h1>
+    
+    <div class="camera-container">
+        <video id="video" width="640" height="480" autoplay></video>
+        <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    </div>
+    
+    <button id="capture-btn" class="btn btn-capture">Capture Photo</button>
+    
+    <form id="attendance-form" method="POST" action="/recognize" style="display:none;">
+        <input type="hidden" id="class-id" name="class_id">
+        <input type="hidden" id="person-name" name="person_name">
+    </form>
+</div>
+
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const captureBtn = document.getElementById('capture-btn');
+
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        video.srcObject = stream;
+    })
+    .catch(err => {
+        console.error("Error accessing camera:", err);
+        alert("Could not access camera. Please check permissions.");
+    });
+
+captureBtn.addEventListener('click', () => {
+    canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+    const image_data = canvas.toDataURL('image/jpeg');
+    
+    fetch('/recognize', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({image: image_data})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.class_id) {
+            window.location.href = `/recognized/${data.class_id}/${encodeURIComponent(data.name)}`;
+        } else {
+            window.location.href = '/not_recognized';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error processing image. Please try again.');
+    });
+});
+</script>
+{% endblock %}
