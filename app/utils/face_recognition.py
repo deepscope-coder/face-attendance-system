@@ -22,7 +22,7 @@ class FaceRecognizer:
         )
         self.app = FaceAnalysis(name="buffalo_l", providers=["CPUExecutionProvider"])
         self.app.prepare(ctx_id=0)
-        self.accuracy_threshold = 0.65  # 75% threshold
+        self.accuracy_threshold = 0.65  # 65% threshold
 
     def recognize_face(self, face_embedding):
         try:
